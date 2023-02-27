@@ -1,10 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PersonService } from 'src/person/person.service';
 import { Equal, Repository } from 'typeorm';
 import { Auth } from 'src/auth/entity/auth.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Person } from 'src/person/entity/person.entity';
+import { ROLE } from 'src/constants/role.constants';
 
 @Injectable()
 export class AuthService {
@@ -20,20 +21,36 @@ export class AuthService {
   }
 
   async validateUser(username: string, pass: number): Promise<any> {
-    console.log(`validating user: ${username} and ${pass}`);
     try {
       const found = await this.authRepository.findOneByOrFail({
         code: Equal(pass),
         phoneNumber: Equal(username),
       });
+      console.log(`validating user`);
+      console.dir(found);
+      const user = await this.personService.findByNumber(found.phoneNumber);
+      console.log(`user exist?`);
+      console.dir(user);
+      if (!user) {
+        console.log('creating new');
+        return this.personService.create({
+          name: '',
+          roles: [ROLE.VISITOR],
+          phoneNumber: found.phoneNumber,
+          birthday: '',
+          hasAlliance: false,
+          picture: '',
+        });
+      }
 
-      return await this.personService.findByNumber(found.phoneNumber);
+      return user;
     } catch (e) {
       return null;
     }
   }
 
   async requestCode(number: string): Promise<number> {
+    console.log(`REQUEST CODE WITH NUMBER: ${number}`);
     const found = await this.authRepository.findOneBy({
       phoneNumber: Equal(number),
     });
@@ -54,13 +71,19 @@ export class AuthService {
       username: person.phoneNumber,
       sub: person.id,
       roles: person.roles,
+      name: person.name,
     };
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
+      isNewUser: !Boolean(person.name),
     };
   }
 
   async signOut(number: string): Promise<void> {
     await this.authRepository.delete({ phoneNumber: number });
+  }
+
+  async getProfile(id: string): Promise<Person | null> {
+    return await this.personService.findOne(id);
   }
 }

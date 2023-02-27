@@ -11,7 +11,7 @@ import {
 
 @Entity()
 export class Departament {
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()

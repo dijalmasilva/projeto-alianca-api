@@ -12,7 +12,7 @@ import {
 
 @Entity()
 export class Event {
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()

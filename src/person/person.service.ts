@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Equal, Repository } from 'typeorm';
 import { Person } from 'src/person/entity/person.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PersonCreateDto } from 'src/person/dto/person-create.dto';
+import { PersonUpdateDto } from 'src/person/dto/person-update.dto';
 
 @Injectable()
 export class PersonService {
@@ -20,31 +21,18 @@ export class PersonService {
   }
 
   findOne(id: string): Promise<Person | null> {
-    try {
-      return this.personRepository.findOne({
-        where: {
-          id: Equal(id),
-        },
-      });
-    } catch (e) {
-      throw new NotFoundException('Usuário não encontrado', {
-        cause: e,
-        description: 'Usuário não cadastrado!',
-      });
-    }
+    return this.personRepository.findOneBy({ id });
   }
 
-  findByNumber(phoneNumber: string): Promise<Person> {
-    try {
-      return this.personRepository.findOneByOrFail({
-        phoneNumber: Equal(phoneNumber),
-      });
-    } catch (e) {
-      throw new NotFoundException('Usuário não encontrado', {
-        cause: e,
-        description: 'Não foi possível encontrar o usuário solicitado.',
-      });
-    }
+  findByNumber(phoneNumber: string): Promise<Person | null> {
+    return this.personRepository.findOneBy({
+      phoneNumber: Equal(phoneNumber),
+    });
+  }
+
+  async update(id: string, person: PersonUpdateDto): Promise<Person | null> {
+    await this.personRepository.update({ id: id }, person);
+    return this.personRepository.findOneBy({ id });
   }
 
   async remove(id: string): Promise<void> {

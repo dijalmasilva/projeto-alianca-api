@@ -5,6 +5,6 @@ export type PersonCreateDto = {
   birthday: string;
   phoneNumber: string;
   picture?: string;
-  hasAlliance?: string;
+  hasAlliance?: boolean;
   roles?: ROLE[];
 };

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { AuthRequestCodeDto } from 'src/auth/dto/auth-request-code.dto';
 import { AuthSignOutDto } from 'src/auth/dto/auth-sign-out.dto';
@@ -17,5 +17,11 @@ export class AuthController {
   @Get('/signOut')
   async signOut(@Body() auth: AuthSignOutDto) {
     await this.authService.signOut(auth.phoneNumber);
+  }
+
+  @Get('/profile')
+  getProfile(@Request() req: any) {
+    const { id } = req.user;
+    return this.authService.getProfile(id);
   }
 }

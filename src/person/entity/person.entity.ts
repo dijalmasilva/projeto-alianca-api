@@ -3,7 +3,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Person {
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
@@ -19,7 +19,7 @@ export class Person {
   picture?: string;
 
   @Column({ default: false })
-  hasAlliance?: string;
+  hasAlliance?: boolean;
 
   @Column('enum', { enum: ROLE, default: [], array: true })
   roles?: ROLE[];
