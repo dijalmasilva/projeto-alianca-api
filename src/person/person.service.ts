@@ -20,8 +20,13 @@ export class PersonService {
     return this.personRepository.find();
   }
 
-  findOne(id: string): Promise<Person | null> {
-    return this.personRepository.findOneBy({ id });
+  findOne(id: string, eagerLoad?: boolean): Promise<Person | null> {
+    return this.personRepository.findOne({
+      where: { id },
+      relations: {
+        churchs: eagerLoad,
+      },
+    });
   }
 
   findByNumber(phoneNumber: string): Promise<Person | null> {

@@ -1,5 +1,6 @@
 import { Person } from 'src/person/entity/person.entity';
 import { Departament } from 'src/departament/entity/departament.entity';
+import Church from 'src/church/entity/church.entity';
 
 export type EventCreateDto = {
   name: string;
@@ -17,4 +18,5 @@ export type EventCreateDto = {
   openWorship?: Person;
   offertory?: Person;
   departament?: Departament;
+  church: Church;
 };

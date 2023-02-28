@@ -9,6 +9,7 @@ import {
   JoinTable,
   JoinColumn,
 } from 'typeorm';
+import Church from 'src/church/entity/church.entity';
 
 @Entity()
 export class Event {
@@ -68,4 +69,8 @@ export class Event {
   @OneToOne(() => Departament)
   @JoinColumn()
   departament?: Departament;
+
+  @OneToOne(() => Church, { nullable: false })
+  @JoinColumn()
+  church: Church;
 }

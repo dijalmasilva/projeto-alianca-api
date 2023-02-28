@@ -7,6 +7,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Person } from 'src/person/entity/person.entity';
 import { ROLE } from 'src/constants/role.constants';
 
+const MAIN_NUMBER = '+5583998058971';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -26,16 +28,19 @@ export class AuthService {
         code: Equal(pass),
         phoneNumber: Equal(username),
       });
-      console.log(`validating user`);
-      console.dir(found);
       const user = await this.personService.findByNumber(found.phoneNumber);
-      console.log(`user exist?`);
-      console.dir(user);
       if (!user) {
-        console.log('creating new');
+        const roles = [ROLE.VISITOR];
+        if (username === MAIN_NUMBER) {
+          roles.push(ROLE.ADMIN);
+          roles.push(ROLE.PASTOR);
+          roles.push(ROLE.LEVITE);
+          roles.push(ROLE.LEADER);
+          roles.push(ROLE.SHEEP);
+        }
         return this.personService.create({
           name: '',
-          roles: [ROLE.VISITOR],
+          roles,
           phoneNumber: found.phoneNumber,
           birthday: '',
           hasAlliance: false,
@@ -50,7 +55,6 @@ export class AuthService {
   }
 
   async requestCode(number: string): Promise<number> {
-    console.log(`REQUEST CODE WITH NUMBER: ${number}`);
     const found = await this.authRepository.findOneBy({
       phoneNumber: Equal(number),
     });
@@ -84,6 +88,6 @@ export class AuthService {
   }
 
   async getProfile(id: string): Promise<Person | null> {
-    return await this.personService.findOne(id);
+    return await this.personService.findOne(id, true);
   }
 }

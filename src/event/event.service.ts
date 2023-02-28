@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Event } from './entity/event.entity';
@@ -12,6 +12,12 @@ export class EventService {
   ) {}
 
   create(event: EventCreateDto): Promise<Event> {
+    if (!event.church) {
+      throw new HttpException(
+        'É necessário informar a igreja.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     return this.eventRepository.save(event);
   }
 

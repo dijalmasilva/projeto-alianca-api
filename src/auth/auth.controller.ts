@@ -14,7 +14,7 @@ export class AuthController {
     return this.authService.requestCode(auth.phoneNumber);
   }
 
-  @Get('/signOut')
+  @Get('/logout')
   async signOut(@Body() auth: AuthSignOutDto) {
     await this.authService.signOut(auth.phoneNumber);
   }

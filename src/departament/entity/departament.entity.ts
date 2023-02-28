@@ -8,6 +8,7 @@ import {
   JoinTable,
   JoinColumn,
 } from 'typeorm';
+import Church from 'src/church/entity/church.entity';
 
 @Entity()
 export class Departament {
@@ -27,4 +28,8 @@ export class Departament {
   @ManyToMany(() => Person)
   @JoinTable()
   members: Person[];
+
+  @OneToOne(() => Church, { nullable: false })
+  @JoinColumn()
+  church: Church;
 }

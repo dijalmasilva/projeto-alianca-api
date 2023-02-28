@@ -22,6 +22,9 @@ import { AppController } from 'src/app.controller';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/roles.guard';
+import { ChurchController } from './church/church.controller';
+import { ChurchService } from './church/church.service';
+import Church from 'src/church/entity/church.entity';
 
 @Module({
   imports: [
@@ -30,7 +33,7 @@ import { RolesGuard } from 'src/roles.guard';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '31d' },
     }),
-    TypeOrmModule.forFeature([Person, Departament, Event, Auth]),
+    TypeOrmModule.forFeature([Person, Departament, Event, Auth, Church]),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -38,7 +41,7 @@ import { RolesGuard } from 'src/roles.guard';
       username: 'postgres',
       password: '123456',
       database: 'projeto-alianca',
-      entities: [Person, Departament, Event, Auth],
+      entities: [Person, Departament, Event, Auth, Church],
       synchronize: true,
     }),
   ],
@@ -49,6 +52,7 @@ import { RolesGuard } from 'src/roles.guard';
     EventController,
     AuthController,
     AppController,
+    ChurchController,
   ],
   providers: [
     PersonService,
@@ -65,6 +69,7 @@ import { RolesGuard } from 'src/roles.guard';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    ChurchService,
   ],
 })
 export class AppModule {}
