@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { EventService } from 'src/event/event.service';
 import { EventCreateDto } from 'src/event/dto/event-create.dto';
 
@@ -16,8 +16,8 @@ export class EventController {
     return this.eventService.create(event);
   }
 
-  @Get()
-  async findOne(@Query() id: string) {
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
     return this.eventService.findOne(id);
   }
 }

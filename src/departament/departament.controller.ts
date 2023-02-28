@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { DepartamentService } from 'src/departament/departament.service';
 import { DepartamentCreateDto } from 'src/departament/dto/departament-create.dto';
 
@@ -11,8 +11,8 @@ export class DepartamentController {
     return this.departamentService.findAll();
   }
 
-  @Get()
-  async findOne(@Query() id: string) {
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
     return this.departamentService.findOne(id);
   }
 

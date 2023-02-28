@@ -1,9 +1,22 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { WinstonModule } from 'nest-winston';
+import { winstonConfig } from 'src/config/winston.config';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
+
+const PORT = 3000;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+  const logger = WinstonModule.createLogger(winstonConfig);
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter(),
+    { logger },
+  );
+  await app.listen(PORT);
 }
 
-bootstrap();
+bootstrap().then(() => console.log('Service listening 👍: ', PORT));

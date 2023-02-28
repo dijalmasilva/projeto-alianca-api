@@ -19,12 +19,15 @@ import { jwtConstants } from 'src/constants/jwt.constants';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { LocalStrategy } from 'src/auth/local.strategy';
 import { AppController } from 'src/app.controller';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/roles.guard';
 import { ChurchController } from './church/church.controller';
 import { ChurchService } from './church/church.service';
 import Church from 'src/church/entity/church.entity';
+import { WinstonModule } from 'nest-winston';
+import { winstonConfig } from 'src/config/winston.config';
+import { LoggerInterceptor } from 'src/interceptors/logger.interceptor';
 
 @Module({
   imports: [
@@ -44,6 +47,7 @@ import Church from 'src/church/entity/church.entity';
       entities: [Person, Departament, Event, Auth, Church],
       synchronize: true,
     }),
+    WinstonModule.forRoot(winstonConfig),
   ],
   controllers: [
     PersonController,
@@ -68,6 +72,10 @@ import Church from 'src/church/entity/church.entity';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggerInterceptor,
     },
     ChurchService,
   ],
