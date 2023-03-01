@@ -31,7 +31,7 @@ export class LoggerInterceptor implements NestInterceptor {
       },
       method,
       ip: req.ip,
-      madeBy: user.username,
+      madeBy: user && user.username,
       timestamp: new Date().toISOString(),
     };
     this.logger.info(log);

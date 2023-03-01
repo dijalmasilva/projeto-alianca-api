@@ -6,6 +6,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import * as morgan from 'morgan';
 
 const PORT = 3000;
 
@@ -16,7 +17,8 @@ async function bootstrap() {
     new FastifyAdapter(),
     { logger },
   );
-  await app.listen(PORT);
+  app.use(morgan('common'));
+  await app.listen(PORT, '::');
 }
 
 bootstrap().then(() => console.log('Service listening 👍: ', PORT));

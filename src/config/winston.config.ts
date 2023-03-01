@@ -1,5 +1,5 @@
 import {
-  utilities as nestWinstonModuleUtilities,
+  // utilities as nestWinstonModuleUtilities,
   WinstonModuleOptions,
 } from 'nest-winston';
 import * as winston from 'winston';
@@ -14,12 +14,12 @@ export const winstonConfig: WinstonModuleOptions = {
   level: 'verbose',
   format: winston.format.json(),
   transports: [
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.timestamp(),
-        nestWinstonModuleUtilities.format.nestLike(),
-      ),
-    }),
+    // new winston.transports.Console({
+    //   format: winston.format.combine(
+    //     winston.format.timestamp(),
+    //     nestWinstonModuleUtilities.format.nestLike(),
+    //   ),
+    // }),
     new winston.transports.File({
       level: 'verbose',
       filename: `${getRotativeFilename()}-projeto-alianca.log`,
